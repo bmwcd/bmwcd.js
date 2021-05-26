@@ -15,16 +15,12 @@ npm install bmwcd.js
 ```javascript
 const bmwcd = require('bmwcd.js')
 
-let vehicles, vehicle
-
 // ConnectedDrive account authentication
 const account = await bmwcd.auth(username, password)
 
-// Select vehicle by VIN, get status
-vehicle = await account.vehicles('WBAXXXXXXX1234567')
+// Select vehicle by VIN; log status; honk if you code
+const vehicle = await account.vehicles('WBAXXXXXXX1234567')
 console.log(await vehicle.status())
-
-// Honk if you like to code
 await vehicle.honk()
 ```
 
@@ -34,17 +30,15 @@ await vehicle.honk()
 import bmwcd from "bmwcd.js"
 const { auth, status, services } = bmwcd
 
-let vehicles, vehicle
-
 // ConnectedDrive username or email, password
 const account = await bmwcd.auth(username, password)
 
 // Fetch all vehicles
-vehicles = await account.vehicles()
+const vehicles = await account.vehicles()
 console.log(vehicles)
 
 // Ordinary method: Select the first vehicle (index 0)
-vehicle = await account.vehicles(0)
+const vehicle = await account.vehicles(0)
 console.log(await vehicle.status())
 
 // Log the last known vehicle location
