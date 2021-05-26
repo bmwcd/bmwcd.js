@@ -1,6 +1,4 @@
-node_modules
+.DS_Store
 .env
-.env.test
-token.json
+node_modules
 **/token.json
-

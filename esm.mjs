@@ -1,4 +1,3 @@
-import bmwcd from './lib/bmwcd.js';
+import bmwcd from './lib/bmwcd.js'
 
-export const { auth, status, parse, parseVehicle, parseLocation, parseStatus } = bmwcd;
-
+export const { auth, status, parse, parseVehicle, parseLocation, parseStatus } = bmwcd
