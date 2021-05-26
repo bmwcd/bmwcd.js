@@ -17,7 +17,7 @@
     "require": "./lib/bmwcd.js"
   },
   "scripts": {
-    "test": "node ./tests/parsed.test.js",
+    "test": "node ./examples/basic.js",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "lint:md": "standard-markdown",
