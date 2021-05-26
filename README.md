@@ -45,7 +45,7 @@ console.log(vehicles)
 
 ## Remote Services
 
-These Remote Servics are currently functioning and usable through the **bmwcd.js** module.
+As of 0.1.1, these Remote Services aren't fully functional. Check back soon!
 
 ```javascript
 const services = async () => {
@@ -78,5 +78,5 @@ Coming soon!
 
 ## Acknowledgements
 
-* [connected_drive.js](https://github.com/1source-ac/connected_drive.js) 
+* [connected_drive.js](https://github.com/1source-ac/connected_drive.js)
 * [bimmerconnected](https://github.com/bimmerconnected/bimmer_connected) (python)
