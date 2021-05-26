@@ -10,9 +10,9 @@
     "require": "./lib/bmwcd.js"
   },
   "scripts": {
-    "test": "node ./tests/basic.test.js",
+    "test": "jest",
+    "test:basic": "node ./tests/basic.test.js",
     "test:parsed": "node ./tests/parsed.test.js",
-    "test:fs": "node ./tests/fs.test.js",
     "test:lowdb": "node ./tests/lowdb.mjs",
     "lint": "standard",
     "lint:fix": "standard --fix",
