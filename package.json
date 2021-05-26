@@ -1,0 +1,46 @@
+{
+  "name": "bmwcd",
+  "version": "0.1.0",
+  "description": "BMW ConnectedDrive module for Node.JS",
+  "main": "index.js",
+  "exports": {
+    "default": "./lib/bmwcd.js",
+    "import": "./esm.mjs",
+    "node": "./lib/bmwcd.js",
+    "require": "./lib/bmwcd.js"
+  },
+  "scripts": {
+    "test": "node ./tests/basic.test.js",
+    "test:parsed": "node ./tests/parsed.test.js",
+    "test:fs": "node ./tests/fs.test.js",
+    "test:lowdb": "node ./tests/lowdb.mjs",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "lint:md": "standard-markdown",
+    "lint:fix:md": "standard-markdown --fix"
+  },
+  "author": "Nicholas Berlette",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmwcd/bmwcd.js.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "await-to-js": "^2.1.1",
+    "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
+    "lodash": "^4.17.21",
+    "lowdb": "^2.1.0",
+    "moment": "^2.29.1",
+    "path": "^0.12.7",
+    "qs": "^6.9.1"
+  },
+  "private": true,
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-plugin-jest": "^24.3.6",
+    "jest": "^27.0.1",
+    "standard": "^16.0.3",
+    "standard-markdown": "^6.0.0"
+  }
+}
