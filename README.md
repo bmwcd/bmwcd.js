@@ -2,7 +2,8 @@
 
 Lightweight module for requesting vehicle status and Remote Services via the BMW ConnectedDrive API.
 
-[![Github all releases](https://img.shields.io/github/downloads/bmwcd/bmwcd.js/total.svg)](https://github.com/bmwcd/bmwcd.js/releases/) [![GitHub release](https://img.shields.io/github/release/bmwcd/bmwcd.js.svg)](https://github.com/bmwcd/bmwcd.js/releases/) [![Only 32 Kb](https://badge-size.herokuapp.com/bmwcd/bmwcd.js/main/lib/bmwcd.js)](https://github.com/bmwcd/bmwcd.js) [![Coverage Status](https://coveralls.io/repos/github/bmwcd/bmwcd.js/badge.svg?branch=main)](https://coveralls.io/github/bmwcd/bmwcd.js?branch=main) [![GitHub license](https://img.shields.io/github/license/bmwcd/bmwcd.js.svg)](https://github.com/bmwcd/bmwcd.js/blob/main/LICENSE.md)
+[![downloads](https://img.shields.io/github/downloads/bmwcd/bmwcd.js/total.svg)](https://github.com/bmwcd/bmwcd.js/releases/) [![release](https://img.shields.io/github/release/bmwcd/bmwcd.js.svg)](https://github.com/bmwcd/bmwcd.js/releases/) ![Lightweight](https://badge-size.herokuapp.com/bmwcd/bmwcd.js/main/lib/bmwcd.js) [![Coverage Status](https://coveralls.io/repos/github/bmwcd/bmwcd.js/badge.svg?branch=main)](https://coveralls.io/github/bmwcd/bmwcd.js?branch=main) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) [![Maintaner](https://img.shields.io/badge/maintainer-nberlette-blue)](https://github.com/nberlette)
+
 
 ### Installation
 
