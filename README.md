@@ -1,4 +1,4 @@
-# bmwcd.js
+# npm install bmwcd.js
 
 Lightweight module for requesting vehicle status and Remote Services via the BMW ConnectedDrive API.
 
