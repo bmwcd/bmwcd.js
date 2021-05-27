@@ -1,6 +1,6 @@
 {
   "name": "bmwcd.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "BMW ConnectedDrive module for Node.JS",
   "author": "Nicholas Berlette",
   "homepage": "https://bmwcd.github.io",
@@ -10,12 +10,7 @@
   },
   "license": "MIT",
   "main": "index.js",
-  "exports": {
-    "default": "./lib/bmwcd.js",
-    "import": "./esm.mjs",
-    "node": "./lib/bmwcd.js",
-    "require": "./lib/bmwcd.js"
-  },
+  "type": "commonjs",
   "scripts": {
     "test": "node ./examples/basic.js",
     "lint": "standard",
