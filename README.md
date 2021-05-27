@@ -2,7 +2,7 @@
 
 Lightweight module for requesting vehicle status and Remote Services via the BMW ConnectedDrive API.
 
-![npm install bmwcd.js](https://img.shields.io/badge/npm%20install-bmwcd.js-red) [![lightweight](https://img.shields.io/badge/size-13.9KB-blue)](https://github.com/bmwcd/bmwcd.js/releases) [![Coverage Status](https://coveralls.io/repos/github/bmwcd/bmwcd.js/badge.svg?branch=main)](https://coveralls.io/github/bmwcd/bmwcd.js?branch=main)[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) [![In memory of James Contino](https://img.shields.io/badge/-RememberJimmy.com-blue)](https://www.rememberjimmy.com)
+![npm install bmwcd.js](https://img.shields.io/badge/npm%20install-bmwcd.js-red) [![lightweight](https://img.shields.io/badge/size-13.9KB-blue)](https://github.com/bmwcd/bmwcd.js/releases) [![Coverage Status](https://coveralls.io/repos/github/bmwcd/bmwcd.js/badge.svg?branch=main)](https://coveralls.io/github/bmwcd/bmwcd.js?branch=main) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) [![In memory of James Contino](https://img.shields.io/badge/-RememberJimmy.com-blue)](https://www.rememberjimmy.com)
 
 ## Basic Usage
 
