@@ -17,7 +17,7 @@ const bmwcd = require('bmwcd.js')
 
 ## Remote Services
 
-Currently, not all of these Remote Services are fully functional. I'm working as fast as I can to fix that!
+Currently, not all of these Remote Services are 100% functional. I'll have it fixed soon!
 
 ```javascript
 const bmwcd = require('bmwcd.js')
@@ -43,6 +43,6 @@ const bmwcd = require('bmwcd.js')
 
 ## Acknowledgements
 
-I was mainly inspired by [connected_drive.js](https://github.com/1source-ac/connected_drive.js), expanding it with many features similar to those in [bimmerconnected](https://github.com/bimmerconnected/bimmer_connected) (python). I also tried to follow similar naming conventions as bimmerconnected, for added compatibility. It's a lot heavier now, but it's getting close to being a completed prototype.
+Inspired by [connected_drive.js](https://github.com/1source-ac/connected_drive.js) and [bimmerconnected](https://github.com/bimmerconnected/bimmer_connected) (python). Shares some similar naming conventions with bimmerconnected for added compatibility.
 
 [![RememberJimmy.com](https://img.shields.io/badge/-RememberJimmy.com-3f3d56)](https://www.rememberjimmy.com)
