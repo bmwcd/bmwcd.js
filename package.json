@@ -1,7 +1,7 @@
 {
   "name": "bmwcd.js",
-  "version": "0.1.2",
-  "description": "BMW ConnectedDrive module for Node.JS",
+  "version": "0.1.5",
+  "description": "BMW ConnectedDrive module for Node",
   "author": "Nicholas Berlette",
   "homepage": "https://bmwcd.github.io",
   "repository": {
@@ -13,10 +13,8 @@
   "type": "commonjs",
   "scripts": {
     "test": "node ./examples/basic.js",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
-    "lint:md": "standard-markdown",
-    "lint:md:fix": "standard-markdown --fix"
+    "lint": "standard && standard-markdown",
+    "lint:fix": "standard --fix && standard-markdown --fix"
   },
   "dependencies": {
     "await-to-js": "^2.1.1",
@@ -24,7 +22,8 @@
     "dotenv": "^10.0.0",
     "js-yaml": "^3.14.1",
     "moment": "^2.29.1",
-    "qs": "^6.9.1"
+    "qs": "^6.9.1",
+    "toker.js": "^0.0.3"
   },
   "devDependencies": {
     "standard": "^16.0.3",

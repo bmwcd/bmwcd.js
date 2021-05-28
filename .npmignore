@@ -1,9 +1,0 @@
-.env
-.env.test
-.DS_Store
-.gitignore
-**/token.json
-examples
-tests
-data
-

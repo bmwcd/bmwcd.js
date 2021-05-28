@@ -1,10 +1,6 @@
-# npm install bmwcd.js
+# bmwcd.js
 
-Lightweight module for requesting vehicle status and Remote Services via the BMW ConnectedDrive API.
-
-![npm install bmwcd.js](https://img.shields.io/badge/npm%20install-bmwcd.js-red) [![lightweight](https://img.shields.io/badge/size-13.9KB-blue)](https://github.com/bmwcd/bmwcd.js/releases) [![Coverage Status](https://coveralls.io/repos/github/bmwcd/bmwcd.js/badge.svg?branch=main)](https://coveralls.io/github/bmwcd/bmwcd.js?branch=main) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) [![In memory of James Contino](https://img.shields.io/badge/-RememberJimmy.com-blue)](https://www.rememberjimmy.com)
-
-## Basic Usage
+## ![npm install bmwcd.js](https://img.shields.io/badge/npm%20install-bmwcd.js-red) [![MIT license](https://img.shields.io/badge/-MIT%20License-8dddff.svg)](https://lbesson.mit-license.org/)
 
 ```javascript
 const bmwcd = require('bmwcd.js')
@@ -45,15 +41,8 @@ const bmwcd = require('bmwcd.js')
 })()
 ```
 
-## Remote Service Status
-
-Responds with real-time status of a recent Remote Service request. Useful to monitor for successful execution of a service like `DOOR_LOCK`.
-
-## Documentation
-
-Coming soon!
-
 ## Acknowledgements
 
-* [connected_drive.js](https://github.com/1source-ac/connected_drive.js)
-* [bimmerconnected](https://github.com/bimmerconnected/bimmer_connected) (python)
+I was mainly inspired by [connected_drive.js](https://github.com/1source-ac/connected_drive.js), expanding it with many features similar to those in [bimmerconnected](https://github.com/bimmerconnected/bimmer_connected) (python). I also tried to follow similar naming conventions as bimmerconnected, for added compatibility. It's a lot heavier now, but it's getting close to being a completed prototype.
+
+[![RememberJimmy.com](https://img.shields.io/badge/-RememberJimmy.com-3f3d56)](https://www.rememberjimmy.com)
