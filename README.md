@@ -1,6 +1,6 @@
 # bmwcd.js
 
-## ![npm install bmwcd.js](https://img.shields.io/badge/npm%20install-bmwcd.js-red) [![MIT license](https://img.shields.io/badge/-MIT%20License-8dddff.svg)](https://lbesson.mit-license.org/)
+## [![npm install bmwcd.js](https://img.shields.io/badge/npm%20install-bmwcd.js-red)](https://www.npmjs.com/package/bmwcd.js) [![MIT license](https://img.shields.io/badge/-MIT%20License-8dddff.svg)](https://lbesson.mit-license.org/)
 
 ```javascript
 const bmwcd = require('bmwcd.js')

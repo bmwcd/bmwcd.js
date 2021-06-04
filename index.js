@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-
-module.exports = require('./lib/bmwcd.js')
+import * as bmwcd from './src/bmwcd.js'
+export { bmwcd }

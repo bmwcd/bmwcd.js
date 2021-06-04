@@ -1,10 +1,19 @@
-const moment = require('moment')
-const util = require('util')
-const { BMW_URLS, FREEDOM_UNITS, _error, convert } = require('./helpers')
+import moment from 'moment'
+import util from 'util'
+
+import {
+  IMPERIAL_UNITS,
+  MAPS_URL
+} from './const.js'
+
+import {
+  convert,
+  _error
+} from './utils.js'
 
 const CBSMESSAGE_DATE_FORMAT = 'M/YYYY'
 
-const parseStates = (value, type = 'options') => {
+function parseValue (value, type = 'options') {
   const keys = {
     OFF: false,
     ON: true,
@@ -23,7 +32,7 @@ const parseStates = (value, type = 'options') => {
   return keys[value] || value
 }
 
-const parseStatusCode = (code, expectedCode = 200) => {
+function parseHttpCode (code, expectedCode = 200) {
   let ret = 'OK'
   switch (code) {
     case 401: ret = 'UNAUTHORIZED'; break
@@ -41,17 +50,27 @@ const parseStatusCode = (code, expectedCode = 200) => {
   return [code, ret]
 }
 
-const parseAll = async (data = {}, status = {}, minimalData = false) => {
+async function parseAll (data = {}, status = {}, minimalData = false) {
   if (!minimalData) {
     return {
-      vehicle: { ...await parseVehicle(data) },
-      status: { ...await parseStatus(data.vin, status) },
-      messages: { ...await parseMessages(status) }
+      vehicle: {
+        ...await parseVehicle(data)
+      },
+      status: {
+        ...await parseStatus(data.vin, status, minimalData)
+      },
+      messages: {
+        ...await parseMessages(status)
+      }
     }
-  } else return { ...await parseStatus(data.vin, status) }
+  } else {
+    return {
+      ...await parseStatus(data.vin, status, minimalData)
+    }
+  }
 }
 
-const checkControlMessages = async (status) => {
+async function checkControlMessages (status) {
   return status.vehicleMessages.ccmMessages.map(msg => {
     return {
       id: parseInt(msg.ccmId),
@@ -62,7 +81,7 @@ const checkControlMessages = async (status) => {
   })
 }
 
-const conditionBasedServices = async (status) => {
+async function conditionBasedServices (status) {
   return status.vehicleMessages.cbsMessages.map(msg => {
     const cbsMessage = {
       type: msg.text.toUpperCase().replace(' ', '_'),
@@ -72,16 +91,16 @@ const conditionBasedServices = async (status) => {
     if ([null, undefined].includes(msg.unitOfLengthRemaining) === false) {
       let mileage = status.attributesMap.mileage // miles
       let distanceLeft = msg.unitOfLengthRemaining // km
-      if (['mls', 'miles'].includes(status.attributesMap.unitOfLength)) distanceLeft = convert.toMiles(distanceLeft, 0) // km -> miles
-      else mileage = convert.toKilom(mileage, 0) // miles -> km
-      cbsMessage.remaining = Math.round(distanceLeft / 100) * 100
-      cbsMessage.scheduled = Math.round((distanceLeft + Math.round(mileage)) / 100) * 100
+      if (['mls', 'miles'].includes(status.attributesMap.unitOfLength)) distanceLeft = convert.toMiles(distanceLeft, 0)
+      else mileage = convert.toKilom(mileage, 0)
+      cbsMessage.remaining = convert.roundMileage(distanceLeft)
+      cbsMessage.scheduled = convert.roundMileage(distanceLeft + mileage)
     }
     return cbsMessage
   })
 }
 
-const parseMessages = async (status = {}) => {
+async function parseMessages (status = {}) {
   if (status.vehicleMessages === undefined) return _error('Invalid status object')
 
   const parsedMessages = {
@@ -95,31 +114,38 @@ const parseMessages = async (status = {}) => {
   return parsedMessages
 }
 
-const parseLocation = async (status = {}, minimalData = false) => {
+async function parseLocation (status = {}, minimalData = false) {
   if (status.attributesMap === undefined) return _error('Invalid status object')
-  if (minimalData) {
-    return [parseInt(status.attributesMap.gps_lat), parseFloat(status.attributesMap.gps_lng), parseFloat(status.attributesMap.heading)]
-  } else {
-    return {
-      latitude: parseFloat(status.attributesMap.gps_lat),
-      longitude: parseFloat(status.attributesMap.gps_lng),
-      heading: parseInt(status.attributesMap.heading),
-      mapsUrl: util.format(BMW_URLS.mapsUrl, status.attributesMap.gps_lat, status.attributesMap.gps_lng)
+  let parsedLocation = {
+    latitude: parseFloat(status.attributesMap.gps_lat),
+    longitude: parseFloat(status.attributesMap.gps_lng),
+    heading: parseInt(status.attributesMap.heading)
+  }
+  if (!minimalData) {
+    parsedLocation = {
+      ...parsedLocation,
+      mapsUrl: util.format(MAPS_URL, status.attributesMap.gps_lat, status.attributesMap.gps_lng)
     }
   }
+  return parsedLocation
 }
 
-const parseStatus = async (vin, status = {}, minimalData = false, standalone = false) => {
+function parseFuelPercent (fuelLiters) {
+  return convert.roundTo((fuelLiters / 62) * 100, 1)
+}
+
+async function parseStatus (vin, status = {}, minimalData = false, standalone = false) {
   if (status.attributesMap === undefined) return _error('Invalid status object')
   if (vin.length !== 17) return _error('Invalid vehicle identifier')
-  let freedomUnits = FREEDOM_UNITS
-  if (freedomUnits === undefined || freedomUnits === null) freedomUnits = (status.attributesMap.unitOfLength === 'mls')
+  let imperialUnits = IMPERIAL_UNITS
+  if (imperialUnits === undefined || imperialUnits === null) imperialUnits = (status.attributesMap.unitOfLength === 'mls')
   // const updateTime = moment(status.attributesMap.updateTime_converted, 'MM/DD/YYYY hh:mm A', false)
   const updateTime = moment(status.attributesMap.updateTime_converted_timestamp, 'x', false)
   let parsedStatus = {}
-  if (standalone) parsedStatus = { id: vin.substr(-7, 7), vin: vin, ...parsedStatus }
+  if (standalone) parsedStatus = { id: parseVin(vin), vin: vin }
   parsedStatus = {
-    updateReason: parseStates(status.attributesMap.lsc_trigger),
+    ...parsedStatus,
+    updateReason: parseValue(status.attributesMap.lsc_trigger),
     doorLockState: status.attributesMap.door_lock_state,
     lscTrigger: status.attributesMap.lsc_trigger,
     timeLoc: updateTime.toISOString(true),
@@ -128,26 +154,21 @@ const parseStatus = async (vin, status = {}, minimalData = false, standalone = f
     mileage: parseInt(status.attributesMap.mileage),
     parkingLights: status.attributesMap.lights_parking,
     vehicleTracker: status.attributesMap.vehicle_tracking,
-    fuelPercent: convert.roundTo((status.attributesMap.remaining_fuel / 62) * 100, 1)
+    remainingFuelPct: parseFuelPercent(status.attributesMap.remaining_fuel)
   }
-  if (freedomUnits) {
+  if (imperialUnits) {
     parsedStatus.remainingFuel = convert.toGallons(status.attributesMap.remaining_fuel)
     parsedStatus.remainingRange = convert.roundTo(status.attributesMap.beRemainingRangeFuelMile, 1)
   } else {
     parsedStatus.remainingFuel = convert.roundTo(status.attributesMap.remaining_fuel, 1)
     parsedStatus.remainingRange = convert.roundTo(status.attributesMap.beRemainingRangeFuelKm, 1)
   }
-  if (!minimalData) {
-    parsedStatus = {
-      ...parsedStatus
-    }
-  }
   parsedStatus = {
     ...parsedStatus,
     unitsLength: status.attributesMap.unitOfLength,
     unitsFuel: status.attributesMap.unitOfCombustionConsumption,
     unitsEnergy: status.attributesMap.unitOfEnergy,
-    location: await parseLocation(status, false),
+    location: await parseLocation(status, !!minimalData),
     lids: {
       hood: status.attributesMap.hood_state,
       frontLeftDoor: status.attributesMap.door_driver_front,
@@ -166,11 +187,15 @@ const parseStatus = async (vin, status = {}, minimalData = false, standalone = f
   return parsedStatus
 }
 
-const parseVehicle = async (data = {}) => {
+function parseVin (vin) {
+  return vin.substr(-7, 7)
+}
+
+async function parseVehicle (data = {}) {
   if (data.vin === undefined) return _error('Invalid vehicle')
 
-  const parsedVehicle = {
-    id: data.vin.substr(-7, 7),
+  return {
+    id: parseVin(data.vin),
     vin: data.vin,
     year: parseInt(data.modelYearNA),
     model: data.modelName,
@@ -181,28 +206,25 @@ const parseVehicle = async (data = {}) => {
       basicType: data.basicType,
       bodyType: data.bodyType,
       doorCount: data.doorCount,
-      steering: parseStates(data.steering),
-      drivetrain: parseStates(data.driveTrain),
-      sunroof: parseStates(data.hasSunRoof),
-      nav: parseStates(data.hasNavi),
-      hybrid: parseStates(data.hasRex),
-      electric: parseStates(data.dcOnly),
-      socMax: data.socMax
+      steering: parseValue(data.steering),
+      drivetrain: parseValue(data.driveTrain),
+      sunroof: parseValue(data.hasSunRoof),
+      nav: parseValue(data.hasNavi),
+      hybrid: parseValue(data.hasRex),
+      electric: parseValue(data.dcOnly)
     }
   }
-  return parsedVehicle
 }
 
-module.exports = {
-  parseAll,
-  parseStates,
-  parseLocation,
+export {
   checkControlMessages,
   conditionBasedServices,
+  parseAll,
+  parseHttpCode,
+  parseLocation,
   parseMessages,
-  parseStatusCode,
   parseStatus,
-  parseVehicle,
-  moment,
-  util
+  parseValue,
+  parseVin,
+  parseVehicle
 }

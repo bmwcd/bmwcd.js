@@ -1,0 +1,11 @@
+.github
+data
+.env
+
+dist
+dist/*
+docs
+docs/*
+sample.json
+
+examples

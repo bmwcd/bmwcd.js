@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-const bmwcd = require('..')
-require('dotenv').config()
+import BmwCD from '../src/bmwcd.js'
+let vehicles, vehicle, status, account
+const bmw = new BmwCD(process.env.BMW_USERNAME, process.env.BMW_PASSWORD)
 
-let account, vehicle, status
-
-(async () => {
-  account = await bmwcd.auth(process.env.BMW_USERNAME, process.env.BMW_PASSWORD)
-  vehicle = await account.findVehicle(process.env.BMW_VIN)
+const main = async () => {
+  account = await bmw.auth()
+  vehicles = await account.getVehicles()
+  vehicle = await account.findVehicle(vehicles[0].vin)
   status = await vehicle.status(true)
   console.log(JSON.stringify(status, null, 2))
-})()
+}
+main()

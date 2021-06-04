@@ -14,15 +14,23 @@ const writeData = async (dataFile, data) => {
   fs.closeSync(fd)
 }
 
-(async () => {
+;(async () => {
   account = await bmwcd.auth(process.env.BMW_USERNAME, process.env.BMW_PASSWORD)
   vehicle = await account.findVehicle(process.env.BMW_VIN)
   status = await vehicle.status(true)
-  const dataPath = path.join(process.cwd(), 'data', moment().format('MM-YYYY'), status.vehicle.id)
+  const dataPath = path.join(
+    process.cwd(),
+    'data',
+    moment().format('MM-YYYY'),
+    status.vehicle.id
+  )
   const dataFile = path.join(dataPath, moment().format('[status_]X[.json]'))
-  await exec(`if [ ! -e "${dataPath}" ]; then mkdir -p "${dataPath}"; fi`, (error, stdout, stderr) => {
-    if (!error) writeData(dataFile, status)
-    console.log(`file://${dataFile}`)
-  })
+  await exec(
+    `if [ ! -e "${dataPath}" ]; then mkdir -p "${dataPath}"; fi`,
+    (error, stdout, stderr) => {
+      if (!error) writeData(dataFile, status)
+      console.log(`file://${dataFile}`)
+    }
+  )
   console.log(JSON.stringify(status, null, 2))
 })()
