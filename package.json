@@ -1,9 +1,10 @@
 {
   "name": "bmwcd.js",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "BMW ConnectedDrive module for Node",
+  "keywords": ["bmw","mini","connecteddrive","bmwcd","iot","home-automation","nodejs","api"],
   "author": "Nicholas Berlette",
-  "homepage": "https://bmwcd.github.io/bmwcd-js",
+  "homepage": "https://berlette.com/bmwcd.js",
   "type": "module",
   "license": "MIT",
   "main": "index.js",
@@ -12,13 +13,14 @@
     "url": "git+https://github.com/bmwcd/bmwcd.js.git"
   },
   "scripts": {
-    "build": "cross-env BABEL_ENV=production babel ./src --out-dir ./dist",
+    "build": "npm run lint:write && cross-env BABEL_ENV=production babel ./src --out-dir ./dist",
     "start": "cross-env BABEL_ENV=development babel --watch ./src --out-dir ./dist",
     "test": "node -r dotenv/config ./examples/basic.js",
     "test:fs": "node -r dotenv/config ./examples/fs.js",
     "test:maps": "node -r dotenv/config ./examples/maps.js",
-    "lint": "standard && standard-markdown",
-    "lint:fix": "standard --fix && standard-markdown --fix"
+    "prettier": "prettier --no-semi --trailing-commas=none --single-quote **/*.js",
+    "lint": "npm run prettier && standard && standard-markdown",
+    "lint:write": "npm run prettier --write && standard --fix && standard-markdown --fix"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.0",

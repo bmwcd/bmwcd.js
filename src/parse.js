@@ -94,7 +94,7 @@ async function conditionBasedServices (status) {
       if (['mls', 'miles'].includes(status.attributesMap.unitOfLength)) distanceLeft = convert.toMiles(distanceLeft, 0)
       else mileage = convert.toKilom(mileage, 0)
       cbsMessage.remaining = convert.roundMileage(distanceLeft)
-      cbsMessage.scheduled = convert.roundMileage(distanceLeft + mileage)
+      cbsMessage.scheduled = convert.roundMileage(distanceLeft) + convert.roundMileage(mileage)
     }
     return cbsMessage
   })

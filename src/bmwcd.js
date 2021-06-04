@@ -32,7 +32,7 @@ import {
   parseVehicle
 } from './parse.js'
 
-import Toker from 'toker.js'
+import { Toker } from 'toker.js'
 const token = new Toker()
 
 let vehicle, vehicles
@@ -41,7 +41,7 @@ export default class BmwCD {
   constructor (username, password) {
     this.username = username
     this.password = password
-    return this
+    return this.auth()
   }
 
   async auth (username = this.username, password = this.password) {
