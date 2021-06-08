@@ -1,8 +1,17 @@
 {
   "name": "bmwcd.js",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "BMW ConnectedDrive module for Node",
-  "keywords": ["bmw","mini","connecteddrive","bmwcd","iot","home-automation","nodejs","api"],
+  "keywords": [
+    "bmw",
+    "mini",
+    "connecteddrive",
+    "bmwcd",
+    "iot",
+    "home-automation",
+    "nodejs",
+    "api"
+  ],
   "author": "Nicholas Berlette",
   "homepage": "https://berlette.com/bmwcd.js",
   "type": "module",
@@ -24,19 +33,20 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.14.0",
-    "await-to-js": "^2.1.1",
+    "await-to-js": "^3.0.0",
     "axios": "^0.21.1",
     "dotenv": "^10.0.0",
-    "js-yaml": "^3.14.1",
+    "js-yaml": "^4.1.0",
     "moment": "^2.29.1",
-    "qs": "^6.9.1",
-    "toker.js": "^0.0.3"
+    "qs": "^6.10.1",
+    "toker.js": "^0.0.5",
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
-    "prettier": "^2.3.0",
     "cross-env": "^7.0.3",
+    "prettier": "^2.3.1",
     "standard": "^16.0.3",
     "standard-markdown": "^6.0.0"
   }
