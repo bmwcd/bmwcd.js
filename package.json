@@ -1,15 +1,16 @@
 {
   "name": "bmwcd.js",
   "version": "0.1.8",
-  "description": "BMW ConnectedDrive module for Node",
+  "description": "BMW ConnectedDrive meets Javascript. Happily ever after.",
   "keywords": [
     "bmw",
     "mini",
     "connecteddrive",
     "bmwcd",
-    "iot",
     "home-automation",
-    "nodejs",
+    "node",
+    "es6",
+    "js",
     "api"
   ],
   "author": "Nicholas Berlette",
@@ -24,12 +25,12 @@
   "scripts": {
     "build": "npm run lint:write && cross-env BABEL_ENV=production babel ./src --out-dir ./dist",
     "start": "cross-env BABEL_ENV=development babel --watch ./src --out-dir ./dist",
-    "test": "node -r dotenv/config ./examples/basic.js",
-    "test:fs": "node -r dotenv/config ./examples/fs.js",
-    "test:maps": "node -r dotenv/config ./examples/maps.js",
-    "prettier": "prettier --no-semi --trailing-commas=none --single-quote **/*.js",
-    "lint": "npm run prettier && standard && standard-markdown",
-    "lint:write": "npm run prettier --write && standard --fix && standard-markdown --fix"
+    "example": "node -r dotenv/config ./examples/basic.js",
+    "example:db": "node -r dotenv/config ./examples/db.js",
+    "example:fs": "node -r dotenv/config ./examples/fs.js",
+    "example:maps": "node -r dotenv/config ./examples/maps.js",
+    "lint": "prettier --no-semi --trailing-comma=none --single-quote **/*.js && standard && standard-markdown",
+    "lint:write": "prettier --no-semi --trailing-comma=none --single-quote **/*.js --write && standard --fix && standard-markdown --fix"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.0",
