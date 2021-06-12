@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import util from 'util'
 
 import {
@@ -86,7 +86,7 @@ async function conditionBasedServices (status) {
     const cbsMessage = {
       type: msg.text.toUpperCase().replace(' ', '_'),
       description: msg.description,
-      dueDate: moment(msg.date).format(CBSMESSAGE_DATE_FORMAT)
+      dueDate: dayjs(msg.date).format(CBSMESSAGE_DATE_FORMAT)
     }
     if ([null, undefined].includes(msg.unitOfLengthRemaining) === false) {
       let mileage = status.attributesMap.mileage // miles
@@ -139,8 +139,8 @@ async function parseStatus (vin, status = {}, minimalData = false, standalone = 
   if (vin.length !== 17) return _error('Invalid vehicle identifier')
   let imperialUnits = IMPERIAL_UNITS
   if (imperialUnits === undefined || imperialUnits === null) imperialUnits = (status.attributesMap.unitOfLength === 'mls')
-  // const updateTime = moment(status.attributesMap.updateTime_converted, 'MM/DD/YYYY hh:mm A', false)
-  const updateTime = moment(status.attributesMap.updateTime_converted_timestamp, 'x', false)
+  // const updateTime = dayjs(status.attributesMap.updateTime_converted, 'MM/DD/YYYY hh:mm A', false)
+  const updateTime = dayjs(status.attributesMap.updateTime_converted_timestamp, 'x', false)
   let parsedStatus = {}
   if (standalone) parsedStatus = { id: parseVin(vin), vin: vin }
   parsedStatus = {
@@ -148,7 +148,7 @@ async function parseStatus (vin, status = {}, minimalData = false, standalone = 
     updateReason: parseValue(status.attributesMap.lsc_trigger),
     doorLockState: status.attributesMap.door_lock_state,
     lscTrigger: status.attributesMap.lsc_trigger,
-    timeLoc: updateTime.toISOString(true),
+    timeLoc: updateTime.toISOString(),
     timeUTC: updateTime.toISOString(),
     timeStr: updateTime.format('dddd [at] h:mm a'),
     mileage: parseInt(status.attributesMap.mileage),

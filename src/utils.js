@@ -22,11 +22,18 @@ const convert = new function () {
   }
 }()
 
-async function _log (...args) {
-  if (BMW_DEBUG) console.log(...args)
-}
-async function _error (...args) {
-  if (BMW_DEBUG) console.error(...args)
+function _log (args) {
+  if (BMW_DEBUG) console.log(args)
+  else console.debug(...args)
 }
 
-export { convert, _log, _error, _k, inObj }
+function _debug (args) {
+  if (BMW_DEBUG) console.log(args)
+  else console.debug(...args)
+}
+
+function _error (args) {
+  console.error(...args)
+}
+
+export { BMW_DEBUG, convert, _log, _error, _debug, _k, inObj }

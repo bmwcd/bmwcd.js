@@ -15,29 +15,17 @@ import { to } from 'await-to-js'
 import axios from 'axios'
 import qs from 'qs'
 import util from 'util'
-import moment from 'moment'
-
-import {
-  BMW_URLS,
-  BMW_SERVICES
-} from './const.js'
-
-import { _log, _error } from './utils.js'
-
-import {
-  parseAll,
-  parseLocation,
-  parseHttpCode,
-  parseVin,
-  parseVehicle
-} from './parse.js'
-
+import dayjs from 'dayjs'
+import { BMW_DEBUG, BMW_URLS, BMW_SERVICES } from './const.js'
+import { _log, _debug, _error } from './utils.js'
+import { parseAll, parseLocation, parseHttpCode, parseVin, parseVehicle } from './parse.js'
 import { Toker } from 'toker.js'
 const token = new Toker()
 
-let vehicle, vehicles
+var vehicle, vehicles, _vehicle
+var _vehicles = {}
 
-export default class BmwCD {
+export default class ConnectedDrive {
   constructor (username, password) {
     this.username = username
     this.password = password
@@ -60,10 +48,9 @@ export default class BmwCD {
 
     const oldToken = await token.read()
     if (token.check(oldToken)) {
-      _log('Session still valid. Authenticated.')
-      _log(` >> Token expires ${moment(oldToken[0]).fromNow()}`)
+      _debug(`[auth] token expires in ${dayjs(oldToken.expiration).fromNow()}`)
     } else {
-      _log('Requesting new token...')
+      _debug('[auth] requesting new token')
       try {
         result = await axios.post(BMW_URLS.auth, qs.stringify(values), {
           headers: {
@@ -80,52 +67,64 @@ export default class BmwCD {
         const tokenResponse = qs.parse(
           result.request.res.responseUrl.split('#')[1]
         )
-        await token.format(tokenResponse, true)
-        _log('Authenticated with new token.')
-        _log(' >> ', token.token[1])
+        let tokenData = await token.format(tokenResponse, true)
+        _debug('[auth] authenticated with new token ', tokenData)
       } catch (err) {
+        _debug('[auth] ', err)
         await token.set(token.default)
       }
     }
     // save token to toker and write json file
-    await token.write()
+    let tokenData = await token.write()
     const headers = {
       Accepted: 'application/json',
-      Authorization: `Bearer ${token.token[1]}`
+      Authorization: `Bearer ${tokenData}`
     }
 
     return {
+      add_vehicle (v) {
+        _vehicles[v.vin] = v
+        return _vehicles[v.vin]
+      },
+
       async getVehicles () {
-        _log('Requesting vehicles...')
+        _debug('[getVehicles] requesting vehicle list from BMW')
+        if (vehicles.length > 0) return [...vehicles]
+
         try {
           result = await axios.get(BMW_URLS.vehicles, {
             headers: headers,
             validateStatus: function (status) {
-              if (status !== 200) { _error('Response Code ', parseHttpCode(status)) }
+              if (status !== 200) { _error(`[getVehicles] response code `, parseHttpCode(status)) }
               return status < 500
             }
           })
         } catch (err) {
-          throw _error(err)
+          throw _error(`[getVehicles] ${err}`)
         }
-        return result.data
+        _debug(`[getVehicles] [raw] ${result.data}`)
+        vehicles = result.data.map((v, i) => this.add_vehicle(parseVehicle(v)))
+        return vehicles
       }, // .vehicles()
 
       async findVehicle (vehicleVin) {
-        if (vehicleVin === undefined || vehicleVin.length !== 17) { return _error('Invalid vehicle identifier') }
+        if (vehicleVin === undefined || vehicleVin.length !== 17) { return _error('[findVehicle] invalid vin') }
         vehicles = await this.getVehicles()
-        vehicle = await parseVehicle(vehicles.find((v) => v.vin === vehicleVin))
+        vehicle = vehicles[vehicleVin]
+        _vehicle = _vehicles[vehicleVin]
+        
         return {
           id: parseVin(vehicle.vin),
           vin: vehicle.vin,
 
-          async status (parseData = true, minimalData = false) {
-            if (vehicle === undefined) return _error('Invalid vehicle')
-            _log(` >> ${vehicle.vin} status...`)
+          async status (parseData = true, minimalData = false, _vehicle = vehicle) {
+            if (vehicle === undefined && _vehicle === undefined) return _error('[vehicle.status] invalid vehicle')
+            else if (vehicle === undefined) vehicle = _vehicle
+            _debug(`[vehicle.status] ${vehicle.vin}`)
             result = await axios.get(util.format(BMW_URLS.status, vehicleVin), {
               headers: headers,
               validateStatus: function (status) {
-                if (status !== 200) { _error('Response Code ', parseHttpCode(status)) }
+                if (status !== 200) { _error(`[vehicle.status] [${vehicleVin}] response code `, parseHttpCode(status)) }
                 return status < 500
               }
             })
@@ -134,33 +133,36 @@ export default class BmwCD {
               : await parseAll(vehicle, result.data, minimalData)
           }, // status()
 
-          async location () {
+          async location (_vehicle = vehicle) {
+            if (vehicle === undefined && _vehicle === undefined && _vehicle === undefined && _vehicle === undefined) return _error('[vehicle.location] invalid vehicle')
+            else if (vehicle === undefined) vehicle = _vehicle
             return parseLocation(await this.status(false))
           }, // location()
 
-          async getImages () {
-            if (this.vehicle === undefined) return _error('Invalid vehicle')
-            _log(' >> ')
+          async getImages (_vehicle = vehicle) {
+            if (vehicle === undefined && _vehicle === undefined) return _error('[vehicle.getImages] invalid vehicle')
+            else if (vehicle === undefined) vehicle = _vehicle
           }, // getImages()
 
-          async remoteService (serviceType = BMW_SERVICES.DOOR_LOCK) {
-            if (this.vehicle === undefined) return _error('Invalid vehicle')
-            _log(` >> BMW_SERVICES.${serviceType} : ${this.vehicle.vin}...`)
-            ;[error, result] = await to(
+          async remoteService (serviceType = BMW_SERVICES.DOOR_LOCK, _vehicle = vehicle) {
+            if (vehicle === undefined && _vehicle === undefined) return _error(`[remoteService.${serviceType}] [${vehicle.vin}] invalid vehicle`)
+            else if (vehicle === undefined) vehicle = _vehicle
+            _debug(`[remoteService.${serviceType}] [${vehicle.vin}]`)
+            const [error, result] = await to(
               axios.post(
-                util.format(BMW_URLS.service, this.vehicle.vin),
+                util.format(BMW_URLS.service, vehicle.vin),
                 qs.stringify({ serviceType: BMW_SERVICES[serviceType] }),
                 {
                   headers: headers,
                   validateStatus: function (status) {
-                    if (status !== 200) { _error('Response Code ', parseHttpCode(status)) }
+                    if (status !== 200) { _error(`[remoteService.${serviceType}] response code `, parseHttpCode(status)) }
                     return status < 500
                   }
                 }
               )
             )
             if (error) throw _error(error)
-            else _log(result.data)
+            _debug(`[remoteService.${serviceType}][${vehicle.vin}] ${result.data}`)
             return result.data
           }, // remoteService()
 
@@ -188,29 +190,28 @@ export default class BmwCD {
             return await this.remoteService(BMW_SERVICES.FINDER)
           }, // finder()
 
-          async remoteServiceStatus (serviceType = BMW_SERVICES.LOCK) {
-            if (this.vehicle === undefined) return _error('Invalid vehicle')
-            _log(
-              ` >> ${serviceType} service status from ${this.vehicle.vin}...`
-            )
-            ;[error, result] = await to(
+          async remoteServiceStatus (serviceType = BMW_SERVICES.LOCK, _vehicle = vehicle) {
+            if (vehicle === undefined && _vehicle === undefined) return _error(`[remoteServiceStatus.${serviceType}] invalid vehicle`)
+            else if (vehicle === undefined) vehicle = _vehicle
+            _debug(`[remoteServiceStatus.${serviceType}] ${vehicle.vin}`)
+            const [error, result] = await to(
               axios.get(
                 util.format(
                   BMW_URLS.serviceStatus,
-                  this.vehicle.vin,
+                  vehicle.vin,
                   BMW_SERVICES[serviceType]
                 ),
                 {
                   headers: headers,
                   validateStatus: function (status) {
-                    if (status !== 200) { _error('Response Code ', parseHttpCode(status)) }
+                    if (status !== 200) { _error(`[remoteServiceStatus.${serviceType}] reponse code `, parseHttpCode(status)) }
                     return status < 500
                   }
                 }
               )
             )
-            if (error) throw _error(error)
-            else _log(result.data)
+            _debug(`[remoteServiceStatus.${serviceType}] ${result.data}`)
+            if (error) throw _error(`[remoteServiceStatus.${serviceType}] ${error}`)
             return result.data
           }, // remoteServiceStatus()
 

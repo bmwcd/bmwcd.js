@@ -1,6 +1,6 @@
 {
   "name": "bmwcd.js",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "BMW ConnectedDrive meets Javascript. Happily ever after.",
   "keywords": [
     "bmw",
@@ -26,8 +26,6 @@
     "build": "npm run lint:write && cross-env BABEL_ENV=production babel ./src --out-dir ./dist",
     "start": "cross-env BABEL_ENV=development babel --watch ./src --out-dir ./dist",
     "example": "node -r dotenv/config ./examples/basic.js",
-    "example:db": "node -r dotenv/config ./examples/db.js",
-    "example:fs": "node -r dotenv/config ./examples/fs.js",
     "example:maps": "node -r dotenv/config ./examples/maps.js",
     "lint": "prettier --no-semi --trailing-comma=none --single-quote **/*.js && standard && standard-markdown",
     "lint:write": "prettier --no-semi --trailing-comma=none --single-quote **/*.js --write && standard --fix && standard-markdown --fix"
@@ -36,11 +34,11 @@
     "@babel/runtime": "^7.14.0",
     "await-to-js": "^3.0.0",
     "axios": "^0.21.1",
+    "dayjs": "^1.10.5",
     "dotenv": "^10.0.0",
     "js-yaml": "^4.1.0",
-    "moment": "^2.29.1",
     "qs": "^6.10.1",
-    "toker.js": "^0.0.5",
+    "toker.js": "^0.0.7",
     "util": "^0.12.4"
   },
   "devDependencies": {
